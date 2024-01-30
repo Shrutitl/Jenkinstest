@@ -4,6 +4,7 @@ pipeline {
     environment {
         MAIN_BRANCH = 'Phase-2'
         NEW_BRANCH = 'release-2'
+        ACCESS_TOKEN = credentials('githubtoken')
     }
 
     stages {
@@ -11,7 +12,11 @@ pipeline {
             steps {
                 script {
                     // Clone all repositories
-                    checkout scm
+                    checkout([$class: 'GitSCM',
+                               branches: [[name: "${MAIN_BRANCH}"]],
+                               userRemoteConfigs: [[credentialsId: 'githubtoken', url: 'https://Shrutitl/jenkinsstage.git'],
+                                                  [credentialsId: 'githubtoken', url: 'https://Shrutitl/your-username/jenkinsprod.git'],
+                                                  [credentialsId: 'githubtoken', url: 'https://Shrutitl/your-username/jenkinsdev.git']]])
 
                     // Additional setup if needed
                 }
