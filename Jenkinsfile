@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         MAIN_BRANCH = 'Phase-2'
-        NEW_BRANCH = 'release-1'
+        NEW_BRANCH = 'release-11'
     }
 
     stages {
