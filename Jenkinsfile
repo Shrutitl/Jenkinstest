@@ -4,7 +4,6 @@ pipeline {
     environment {
         MAIN_BRANCH = 'Phase-2'
         NEW_BRANCH = 'release-1'
-        REPOSITORIES = ['jenkinsstage', 'jenkinsprod', 'jenkinsdev'] // Add your repository names here
     }
 
     stages {
@@ -22,6 +21,9 @@ pipeline {
         stage('Create Branch') {
             steps {
                 script {
+                    // Define repositories
+                    REPOSITORIES = ['jenkinsstage', 'jenkinsprod', 'jenkinsdev']
+
                     // Iterate through repositories and create the new branch
                     REPOSITORIES.each { repository ->
                         createBranch(repository)
