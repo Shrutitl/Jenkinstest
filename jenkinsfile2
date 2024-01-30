@@ -1,0 +1,29 @@
+pipeline {
+    agent any
+
+    environment {
+        REPOSITORIES = ['JENKINSDEV', 'JENKINSSTAGE', 'JENKINSTEST']
+        NEW_BRANCH = 'feature/new-branch'
+    }
+
+    stages {
+        stage('Checkout and Create Branch') {
+            steps {
+                script {
+                    // Loop through each repository
+                    for (String repo : env.REPOSITORIES) {
+                        // Define the repository URL
+                        def repoUrl = "https://github.com/your-username/${repo}.git" // Update with your actual repository URL
+
+                        // Checkout the repository
+                        checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: repoUrl]]])
+
+                        // Create a new branch
+                        sh "git checkout -b ${env.NEW_BRANCH}"
+                        sh "git push origin ${env.NEW_BRANCH}"
+                    }
+                }
+            }
+        }
+    }
+}
