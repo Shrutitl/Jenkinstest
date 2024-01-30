@@ -4,7 +4,7 @@ pipeline {
     environment {
         MAIN_BRANCH = 'main'
         NEW_BRANCH = 'release-1'
-        REPOSITORIES = ['dev', 'prod', 'stg'] // Add your repository names here
+        REPOSITORIES = ['jenkinsstage', 'jenkinsprod', 'jenkinsstage'] // Add your repository names here
     }
 
     stages {
