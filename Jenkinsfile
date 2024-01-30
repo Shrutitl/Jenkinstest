@@ -2,9 +2,9 @@ pipeline {
     agent any
 
     environment {
-        MAIN_BRANCH = 'main'
+        MAIN_BRANCH = 'Phase-2'
         NEW_BRANCH = 'release-1'
-        REPOSITORIES = ['jenkinsstage', 'jenkinsprod', 'jenkinsstage'] // Add your repository names here
+        REPOSITORIES = ['jenkinsstage', 'jenkinsprod', 'jenkinsdev'] // Add your repository names here
     }
 
     stages {
