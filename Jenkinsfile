@@ -5,6 +5,7 @@ pipeline {
         MAIN_BRANCH = 'Phase-2'
         NEW_BRANCH = 'release-4'
         ACCESS_TOKEN = credentials('githubtoken')
+sh 'git config --local credential.helper "!p() { echo username=\\$GIT_USERNAME; echo password=\\$GIT_PASSWORD; }; p"'
     }
 
     stages {
@@ -61,12 +62,24 @@ def createBranch(repository, userEmail) {
 
         // Commit and push the new branch to the remote repository
         sh "git -C ${repository} commit -m 'Create ${NEW_BRANCH}'"
+        sh 'git tag -m "" ${VERSION_NUMBER}'
+        withCredentials([
+          usernamePassword(credentialsId: 'github', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')
+]) {
+  sh 'git push origin ${VERSION_NUMBER}'
+}
         sh "git -C ${repository} push origin ${NEW_BRANCH}"
     } else {
         echo "Branch ${NEW_BRANCH} already exists locally in ${repository}. Skipping branch creation."
 
         // Uncomment the line below to push the existing branch to the remote repository
         sh "git -C ${repository} commit -m 'Create ${NEW_BRANCH}'"
+        sh 'git tag -m "" ${VERSION_NUMBER}'
+        withCredentials([
+        usernamePassword(credentialsId: 'github', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')
+]) {
+  sh 'git push origin ${VERSION_NUMBER}'
+}
         sh "git -C ${repository} push origin ${NEW_BRANCH}"
     }
 
