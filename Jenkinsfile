@@ -40,30 +40,25 @@ pipeline {
 }
 
 def createBranch(repository) {
-    // Navigate to the repository directory
-    dir(repository) {
-        // Create a new branch in the specified repository
-        sh "git checkout ${MAIN_BRANCH}"
+    // Create a new branch in the specified repository
+    sh "git checkout ${MAIN_BRANCH}"
 
-        // Pull with rebase to reconcile divergent branches
-        sh "git pull --rebase origin ${MAIN_BRANCH}"
+    // Pull with rebase to reconcile divergent branches
+    sh "git pull --rebase origin ${MAIN_BRANCH}"
 
-        // Check if the branch already exists locally
-        def branchExistsLocally = sh(script: "git branch --list ${NEW_BRANCH}", returnStatus: true) == 0
+    // Check if the branch already exists locally
+    def branchExistsLocally = sh(script: "git branch --list ${NEW_BRANCH}", returnStatus: true) == 0
 
-        if (!branchExistsLocally) {
-            // Create and switch to the new branch locally
-            sh "git checkout -b ${NEW_BRANCH}"
-            
-            // Add a dummy commit
-            sh "touch dummy.txt"
-            sh "git add dummy.txt"
-            sh "git commit -m 'Initial commit'"
-        } else {
-            echo "Branch ${NEW_BRANCH} already exists locally. Skipping branch creation."
-        }
+    if (!branchExistsLocally) {
+        // Create and switch to the new branch locally
+        sh "git checkout -b ${NEW_BRANCH}"
+        // Additional steps if needed
 
         // Push the new branch to the remote repository
         sh "git push origin ${NEW_BRANCH}"
+    } else {
+        echo "Branch ${NEW_BRANCH} already exists locally. Skipping branch creation."
     }
+
+    // Additional steps if needed
 }
