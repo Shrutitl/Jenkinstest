@@ -63,7 +63,9 @@ def createBranch(repository, userEmail) {
         sh "git -C ${repository} config user.email '${userEmail}'"
 
         // Check if the branch already exists locally
-        def branchExistsLocally = sh(script: "git -C ${repository} branch --list ${NEW_BRANCH}", returnStatus: true) == 0
+        // Check if the branch already exists locally
+def branchExistsLocally = sh(script: "git -C ${repository} branch -a --list ${NEW_BRANCH}", returnStatus: true) == 0
+
 
         if (!branchExistsLocally) {
             // Create and switch to the new branch in the specified repository
