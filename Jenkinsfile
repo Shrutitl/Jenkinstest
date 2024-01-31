@@ -42,7 +42,7 @@ pipeline {
 def createBranch(repository) {
     // Create a new branch in the specified repository
     sh "git checkout ${MAIN_BRANCH}"
-    sh "git pull origin ${MAIN_BRANCH}"
+    //sh "git pull origin ${MAIN_BRANCH}"
 
     // Pull with rebase to reconcile divergent branches
     sh "git pull --rebase origin ${MAIN_BRANCH}"
