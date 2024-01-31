@@ -44,7 +44,7 @@ def createBranch(repository) {
         sh "git pull --rebase origin ${MAIN_BRANCH}"
 
         // Check if the branch already exists locally
-        def branchExistsLocally = sh(script: "git branch --list ${NEW_BRANCH}", returnStatus: true) == 0
+        def branchExistsLocally = sh(script: 'git branch --list ${NEW_BRANCH}', returnStatus: true) == 0
 
         if (!branchExistsLocally) {
             // Create and switch to the new branch locally
