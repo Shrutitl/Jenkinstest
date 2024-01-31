@@ -54,7 +54,7 @@ def createBranch(repository) {
        // sh "git -C ${repository} checkout -b ${NEW_BRANCH}"
          sh "git checkout -b ${NEW_BRANCH} origin/${NEW_BRANCH}"
         // Additional steps if needed
-         sh "(git commit -m "Initial comment")"
+         sh  "git commit "
         sh "git push origin ${NEW_BRANCH}"
         // Push the new branch to the remote repository
         //sh "git -C ${repository} push origin ${NEW_BRANCH}"
@@ -66,7 +66,7 @@ def createBranch(repository) {
         // sh "git -C ${repository} push origin ${NEW_BRANCH}"
           //sh "git push"
         //sh "git -C ${repository} push -u origin ${NEW_BRANCH}"
-        sh "(git commit -m "Initial comment")"
+        sh "git commit "
          sh "git push origin ${NEW_BRANCH}"
     }
 
