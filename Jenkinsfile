@@ -42,6 +42,8 @@ pipeline {
 def createBranch(repository) {
     // Create a new branch in the specified repository
     sh "git -C ${repository} checkout ${MAIN_BRANCH}"
+
+    // Pull with rebase to reconcile divergent branches
     sh "git -C ${repository} pull --rebase origin ${MAIN_BRANCH}"
 
     // Check if the branch already exists locally
@@ -56,7 +58,10 @@ def createBranch(repository) {
         sh "git -C ${repository} push origin ${NEW_BRANCH}"
     } else {
         echo "Branch ${NEW_BRANCH} already exists locally in ${repository}. Skipping branch creation."
+        // Uncomment the line below to push the existing branch to the remote repository
+         sh "git -C ${repository} push origin ${NEW_BRANCH}"
     }
 
     // Additional steps if needed
 }
+
