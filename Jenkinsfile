@@ -58,7 +58,7 @@ def createBranch(repository) {
         sh "git push origin ${NEW_BRANCH}"
     } else {
         echo "Branch ${NEW_BRANCH} already exists locally. Skipping branch creation."
-        sh "git push origin ${NEW_BRANCH}
+        sh "git push origin ${NEW_BRANCH}"
     }
 
     // Additional steps if needed
