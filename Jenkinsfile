@@ -45,23 +45,21 @@ pipeline {
 
 def createBranch(repository, userEmail) {
     // Set Git user email for the specific repository
-    sh "git -C ${repository} config user.email ${userEmail}"
-
-    // Create a new branch in the specified repository
-    sh "git -C ${repository} checkout -b ${NEW_BRANCH}"
-
-    // Pull with rebase to reconcile divergent branches
-    sh "git -C ${repository} pull --rebase origin ${MAIN_BRANCH}"
+    sh "git -C ${repository} config user.email '${userEmail}'"
 
     // Check if the branch already exists locally
     def branchExistsLocally = sh(script: "git -C ${repository} branch --list ${NEW_BRANCH}", returnStatus: true) == 0
 
     if (!branchExistsLocally) {
+        // Create and switch to the new branch in the specified repository
+        sh "git -C ${repository} checkout -b ${NEW_BRANCH}"
+
+        // Pull with rebase to reconcile divergent branches
+        sh "git -C ${repository} pull --rebase origin ${MAIN_BRANCH}"
+
         // Additional steps if needed
 
         // Commit and push the new branch to the remote repository
-       // sh "touch ${repository}/dummy.txt"
-        //sh "git -C ${repository} add ."
         sh "git -C ${repository} commit -m 'Create ${NEW_BRANCH}'"
         sh "git -C ${repository} push origin ${NEW_BRANCH}"
     } else {
