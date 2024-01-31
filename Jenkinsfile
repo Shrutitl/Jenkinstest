@@ -14,9 +14,9 @@ pipeline {
                     // Clone all repositories
                     checkout([$class: 'GitSCM',
                                branches: [[name: "${MAIN_BRANCH}"]],
-                               userRemoteConfigs: [[credentialsId: 'githubtoken', url: 'https://Shrutitl/jenkinsstage.git'],
-                                                  [credentialsId: 'githubtoken', url: 'https://Shrutitl/jenkinsprod.git'],
-                                                  [credentialsId: 'githubtoken', url: 'https://Shrutitl/jenkinsdev.git']]])
+                               userRemoteConfigs: [[credentialsId: 'githubtoken', url: 'https://github.com/Shrutitl/jenkinsstage.git'],
+                                                  [credentialsId: 'githubtoken', url: 'https://github.com/Shrutitl/jenkinsprod.git'],
+                                                  [credentialsId: 'githubtoken', url: 'https://github.com/Shrutitl/jenkinsdev.git']]])
 
                     // Additional setup if needed
                 }
