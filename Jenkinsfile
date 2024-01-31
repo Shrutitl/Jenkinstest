@@ -42,8 +42,6 @@ pipeline {
 def createBranch(repository) {
     // Create a new branch in the specified repository
     sh "git checkout ${MAIN_BRANCH}"
-
-    // Pull with rebase to reconcile divergent branches
     sh "git pull --rebase origin ${MAIN_BRANCH}"
 
     // Check if the branch already exists locally
@@ -52,13 +50,21 @@ def createBranch(repository) {
     if (!branchExistsLocally) {
         // Create and switch to the new branch locally
         sh "git checkout -b ${NEW_BRANCH}"
+
         // Additional steps if needed
 
         // Push the new branch to the remote repository
-        sh "git push origin ${NEW_BRANCH}"
+        def pushCommand = "git push origin ${NEW_BRANCH}"
+        echo "Executing: ${pushCommand}"
+
+        try {
+            sh pushCommand
+        } catch (Exception e) {
+            echo "Failed to push the branch. Error: ${e.message}"
+            currentBuild.result = 'FAILURE'
+        }
     } else {
         echo "Branch ${NEW_BRANCH} already exists locally. Skipping branch creation."
-        sh "git push origin ${NEW_BRANCH}"
     }
 
     // Additional steps if needed
