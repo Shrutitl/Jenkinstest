@@ -29,7 +29,7 @@ pipeline {
                     // Define repositories
                     REPOSITORIES = ['jenkinsstage', 'jenkinsprod', 'jenkinsdev']
 
-                    // Iterate through repositories and create/push the new branch
+                    // Iterate through repositories and create the new branch
                     REPOSITORIES.each { repository ->
                         createBranch(repository)
                     }
@@ -40,9 +40,9 @@ pipeline {
 }
 
 def createBranch(repository) {
-    // Create a new branch in the specified repository
+    // Navigate to the repository directory
     dir(repository) {
-        // Switch to the main branch
+        // Create a new branch in the specified repository
         sh "git checkout ${MAIN_BRANCH}"
 
         // Pull with rebase to reconcile divergent branches
@@ -59,13 +59,11 @@ def createBranch(repository) {
             sh "touch dummy.txt"
             sh "git add dummy.txt"
             sh "git commit -m 'Initial commit'"
+        } else {
+            echo "Branch ${NEW_BRANCH} already exists locally. Skipping branch creation."
         }
 
         // Push the new branch to the remote repository
         sh "git push origin ${NEW_BRANCH}"
-
-        // Verify that the branch is now visible on GitHub
-        sh "git ls-remote --heads origin ${NEW_BRANCH}"
     }
-    // Additional steps if needed
 }
