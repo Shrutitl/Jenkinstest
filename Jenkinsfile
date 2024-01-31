@@ -43,6 +43,7 @@ def createBranch(repository) {
     // Create a new branch in the specified repository
     sh "git checkout ${MAIN_BRANCH}"
     sh "git pull origin ${MAIN_BRANCH}"
+    sh "git pull --rebase origin ${MAIN_BRANCH}"
     sh "git checkout -b ${NEW_BRANCH}"
     sh "git push origin ${NEW_BRANCH}"
 
