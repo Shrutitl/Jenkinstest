@@ -29,7 +29,7 @@ pipeline {
                     // Define repositories
                     REPOSITORIES = ['jenkinsstage', 'jenkinsprod', 'jenkinsdev']
 
-                    // Iterate through repositories and create the new branch
+                    // Iterate through repositories and create/push the new branch
                     REPOSITORIES.each { repository ->
                         createBranch(repository)
                     }
@@ -62,7 +62,11 @@ def createBranch(repository) {
             // Verify that the branch is now visible on GitHub
             sh "git ls-remote --heads origin ${NEW_BRANCH}"
         } else {
-            echo "Branch ${NEW_BRANCH} already exists locally in ${repository}. Skipping branch creation."
+            // Branch already exists locally, push it to remote
+            sh "git push origin ${NEW_BRANCH}"
+
+            // Verify that the branch is now visible on GitHub
+            sh "git ls-remote --heads origin ${NEW_BRANCH}"
         }
     }
     // Additional steps if needed
