@@ -40,17 +40,14 @@ pipeline {
 }
 
 def createBranch(repository) {
-
-     //withCredentials([usernamePassword(credentialsId: 'githubtoken', passwordVariable: 'ACCESS_TOKEN', usernameVariable: 'USERNAME')])
     // Create a new branch in the specified repository
     sh "git checkout ${MAIN_BRANCH}"
-    //sh "git pull origin ${MAIN_BRANCH}"
 
     // Pull with rebase to reconcile divergent branches
     sh "git pull --rebase origin ${MAIN_BRANCH}"
 
     // Check if the branch already exists
-    def branchExists = sh(script: "git rev-parse --verify ${NEW_BRANCH}", returnStatus: true) == 0
+    def branchExists = sh(script: "git branch -a | grep -q ${NEW_BRANCH}", returnStatus: true) == 0
 
     if (!branchExists) {
         sh "git checkout -b ${NEW_BRANCH}"
@@ -58,10 +55,6 @@ def createBranch(repository) {
     } else {
         echo "Branch ${NEW_BRANCH} already exists. Skipping branch creation."
     }
-
-
-    sh "git checkout -b ${NEW_BRANCH}"
-    sh "git push origin ${NEW_BRANCH}"
 
     // Additional steps if needed
 }
