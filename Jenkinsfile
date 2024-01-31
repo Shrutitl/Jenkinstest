@@ -5,7 +5,6 @@ pipeline {
         MAIN_BRANCH = 'Phase-2'
         NEW_BRANCH = 'release-5'
         ACCESS_TOKEN = credentials('githubtoken')
-
     }
 
     stages {
@@ -14,10 +13,13 @@ pipeline {
                 script {
                     // Clone all repositories
                     checkout([$class: 'GitSCM',
-                               branches: [[name: "${MAIN_BRANCH}"]],
-                               userRemoteConfigs: [[credentialsId: 'githubtoken', url: 'https://github.com/Shrutitl/jenkinsstage.git'],
-                                                  [credentialsId: 'githubtoken', url: 'https://github.com/Shrutitl/jenkinsprod.git'],
-                                                  [credentialsId: 'githubtoken', url: 'https://github.com/Shrutitl/jenkinsdev.git']]])
+                        branches: [[name: "${MAIN_BRANCH}"]],
+                        userRemoteConfigs: [
+                            [credentialsId: 'githubtoken', url: 'https://github.com/Shrutitl/jenkinsstage.git'],
+                            [credentialsId: 'githubtoken', url: 'https://github.com/Shrutitl/jenkinsprod.git'],
+                            [credentialsId: 'githubtoken', url: 'https://github.com/Shrutitl/jenkinsdev.git']
+                        ]
+                    ])
 
                     // Additional setup if needed
                 }
@@ -41,9 +43,19 @@ pipeline {
                 }
             }
         }
+
+        stage('List Branches') {
+            steps {
+                script {
+                    // List branches in each repository
+                    listBranches('jenkinsstage')
+                    listBranches('jenkinsprod')
+                    listBranches('jenkinsdev')
+                }
+            }
+        }
     }
-
-
+}
 
 def createBranch(repository, userEmail) {
     script {
@@ -74,26 +86,13 @@ def createBranch(repository, userEmail) {
             }
         } else {
             echo "Branch ${NEW_BRANCH} already exists locally in ${repository}. Skipping branch creation."
-               
         }
 
         // Additional steps if needed
     }
 }
-    stage('List Branches') {
-            steps {
-                script {
-                    // List branches in each repository
-                    listBranches('jenkinsstage')
-                    listBranches('jenkinsprod')
-                    listBranches('jenkinsdev')
-                }
-            }
-        }
-
 
 def listBranches(repository) {
     // List branches in the specified repository
     sh "git -C ${repository} branch"
-}
 }
