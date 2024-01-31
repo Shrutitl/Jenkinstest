@@ -49,6 +49,17 @@ def createBranch(repository) {
     // Pull with rebase to reconcile divergent branches
     sh "git pull --rebase origin ${MAIN_BRANCH}"
 
+    // Check if the branch already exists
+    def branchExists = sh(script: "git rev-parse --verify ${NEW_BRANCH}", returnStatus: true) == 0
+
+    if (!branchExists) {
+        sh "git checkout -b ${NEW_BRANCH}"
+        sh "git push origin ${NEW_BRANCH}"
+    } else {
+        echo "Branch ${NEW_BRANCH} already exists. Skipping branch creation."
+    }
+
+
     sh "git checkout -b ${NEW_BRANCH}"
     sh "git push origin ${NEW_BRANCH}"
 
