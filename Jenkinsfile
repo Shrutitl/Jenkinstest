@@ -70,6 +70,7 @@ def branchExistsLocally = sh(script: "git -C ${repository} branch -a --list ${NE
         if (!branchExistsLocally) {
             // Create and switch to the new branch in the specified repository
             sh "git -C ${repository} checkout -b ${NEW_BRANCH}"
+            sh "git -C ${repository} checkout ${NEW_BRANCH}"
 
             // Pull with rebase to reconcile divergent branches
             sh "git -C ${repository} pull --rebase origin ${MAIN_BRANCH}"
