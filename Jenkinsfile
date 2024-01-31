@@ -59,19 +59,13 @@ def createBranch(repository) {
             sh "touch dummy.txt"
             sh "git add dummy.txt"
             sh "git commit -m 'Initial commit'"
-            
-            // Push the new branch to the remote repository
-            sh "git push origin ${NEW_BRANCH}"
-
-            // Verify that the branch is now visible on GitHub
-            sh "git ls-remote --heads origin ${NEW_BRANCH}"
-        } else {
-            // Branch already exists locally, push it to remote
-            sh "git push origin ${NEW_BRANCH}"
-
-            // Verify that the branch is now visible on GitHub
-            sh "git ls-remote --heads origin ${NEW_BRANCH}"
         }
+
+        // Push the new branch to the remote repository
+        sh "git push origin ${NEW_BRANCH}"
+
+        // Verify that the branch is now visible on GitHub
+        sh "git ls-remote --heads origin ${NEW_BRANCH}"
     }
     // Additional steps if needed
 }
