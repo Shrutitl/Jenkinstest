@@ -40,6 +40,8 @@ pipeline {
 }
 
 def createBranch(repository) {
+
+     withCredentials([usernamePassword(credentialsId: 'githubtoken', passwordVariable: 'ACCESS_TOKEN', usernameVariable: 'USERNAME')])
     // Create a new branch in the specified repository
     sh "git checkout ${MAIN_BRANCH}"
     //sh "git pull origin ${MAIN_BRANCH}"
