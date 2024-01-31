@@ -55,11 +55,15 @@ def createBranch(repository) {
         // Additional steps if needed
 
         // Push the new branch to the remote repository
-        sh "git -C ${repository} push origin ${NEW_BRANCH}"
+        //sh "git -C ${repository} push origin ${NEW_BRANCH}"
+         //sh "git push"
+        sh "git -C ${repository} push -u origin ${NEW_BRANCH}"
     } else {
         echo "Branch ${NEW_BRANCH} already exists locally in ${repository}. Skipping branch creation."
         // Uncomment the line below to push the existing branch to the remote repository
-         sh "git -C ${repository} push origin ${NEW_BRANCH}"
+        // sh "git -C ${repository} push origin ${NEW_BRANCH}"
+          //sh "git push"
+        sh "git -C ${repository} push -u origin ${NEW_BRANCH}"
     }
 
     // Additional steps if needed
