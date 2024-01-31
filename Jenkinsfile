@@ -15,8 +15,8 @@ pipeline {
                     checkout([$class: 'GitSCM',
                                branches: [[name: "${MAIN_BRANCH}"]],
                                userRemoteConfigs: [[credentialsId: 'githubtoken', url: 'https://Shrutitl/jenkinsstage.git'],
-                                                  [credentialsId: 'githubtoken', url: 'https://Shrutitl/your-username/jenkinsprod.git'],
-                                                  [credentialsId: 'githubtoken', url: 'https://Shrutitl/your-username/jenkinsdev.git']]])
+                                                  [credentialsId: 'githubtoken', url: 'https://Shrutitl/jenkinsprod.git'],
+                                                  [credentialsId: 'githubtoken', url: 'https://Shrutitl/jenkinsdev.git']]])
 
                     // Additional setup if needed
                 }
