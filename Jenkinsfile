@@ -54,8 +54,12 @@ def createBranch(repository) {
         if (!branchExistsLocally) {
             // Create and switch to the new branch locally
             sh "git checkout -b ${NEW_BRANCH}"
-            // Additional steps if needed
-
+            
+            // Add a dummy commit
+            sh "touch dummy.txt"
+            sh "git add dummy.txt"
+            sh "git commit -m 'Initial commit'"
+            
             // Push the new branch to the remote repository
             sh "git push origin ${NEW_BRANCH}"
 
