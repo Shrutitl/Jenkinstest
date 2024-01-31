@@ -51,19 +51,21 @@ def createBranch(repository) {
 
     if (!branchExistsLocally) {
         // Create and switch to the new branch locally
-        sh "git -C ${repository} checkout -b ${NEW_BRANCH}"
+       // sh "git -C ${repository} checkout -b ${NEW_BRANCH}"
+         sh "git checkout -B ${NEW_BRANCH} origin/${NEW_BRANCH}"
         // Additional steps if needed
-
+        sh "git push origin ${NEW_BRANCH}"
         // Push the new branch to the remote repository
         //sh "git -C ${repository} push origin ${NEW_BRANCH}"
          //sh "git push"
-        sh "git -C ${repository} push -u origin ${NEW_BRANCH}"
+        //sh "git -C ${repository} push -u origin ${NEW_BRANCH}"
     } else {
         echo "Branch ${NEW_BRANCH} already exists locally in ${repository}. Skipping branch creation."
         // Uncomment the line below to push the existing branch to the remote repository
         // sh "git -C ${repository} push origin ${NEW_BRANCH}"
           //sh "git push"
-        sh "git -C ${repository} push -u origin ${NEW_BRANCH}"
+        //sh "git -C ${repository} push -u origin ${NEW_BRANCH}"
+         sh "git push origin ${NEW_BRANCH}"
     }
 
     // Additional steps if needed
