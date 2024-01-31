@@ -5,6 +5,7 @@ pipeline {
         MAIN_BRANCH = 'Phase-2'
         NEW_BRANCH = 'release-4'
         ACCESS_TOKEN = credentials('githubtoken')
+        REPOSITORIES = ['jenkinsstage', 'jenkinsprod', 'jenkinsdev']
     }
 
     stages {
@@ -26,9 +27,6 @@ pipeline {
         stage('Create Branch') {
             steps {
                 script {
-                    // Define repositories
-                    REPOSITORIES = ['jenkinsstage', 'jenkinsprod', 'jenkinsdev']
-
                     // Iterate through repositories and create the new branch
                     REPOSITORIES.each { repository ->
                         createBranch(repository)
@@ -41,24 +39,26 @@ pipeline {
 
 def createBranch(repository) {
     // Create a new branch in the specified repository
-    sh "git checkout ${MAIN_BRANCH}"
-    sh "git pull --rebase origin ${MAIN_BRANCH}"
+    dir(repository) {
+        sh "git checkout ${MAIN_BRANCH}"
+        sh "git pull --rebase origin ${MAIN_BRANCH}"
 
-    // Check if the branch already exists locally
-    def branchExistsLocally = sh(script: "git branch --list ${NEW_BRANCH}", returnStatus: true) == 0
+        // Check if the branch already exists locally
+        def branchExistsLocally = sh(script: "git branch --list ${NEW_BRANCH}", returnStatus: true) == 0
 
-    if (!branchExistsLocally) {
-        // Create and switch to the new branch locally
-        sh "git checkout -b ${NEW_BRANCH}"
+        if (!branchExistsLocally) {
+            // Create and switch to the new branch locally
+            sh "git checkout -b ${NEW_BRANCH}"
+            // Additional steps if needed
+
+            // Push the new branch to the remote repository
+            sh "git push origin ${NEW_BRANCH}"
+        } else {
+            // Push the existing branch to the remote repository
+            sh "git push origin ${NEW_BRANCH}"
+            echo "Branch ${NEW_BRANCH} already exists locally. Pushing changes to remote."
+        }
+
         // Additional steps if needed
-
-        // Push the new branch to the remote repository
-        sh "git push origin ${NEW_BRANCH}"
-    } else {
-        // Push the existing branch to the remote repository
-        sh "git push origin ${NEW_BRANCH}"
-        echo "Branch ${NEW_BRANCH} already exists locally. Pushing changes to remote."
     }
-
-    // Additional steps if needed
 }
