@@ -90,8 +90,7 @@ def createBranch(repository, userEmail) {
                 }
             }
         }
-    }
-}
+    
 
 def listBranches(repository) {
     // List branches in the specified repository
