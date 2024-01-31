@@ -66,6 +66,7 @@ def createBranch(repository, userEmail) {
         echo "Branch ${NEW_BRANCH} already exists locally in ${repository}. Skipping branch creation."
 
         // Uncomment the line below to push the existing branch to the remote repository
+        sh "git -C ${repository} commit -m 'Create ${NEW_BRANCH}'"
         sh "git -C ${repository} push origin ${NEW_BRANCH}"
     }
 
