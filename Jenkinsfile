@@ -79,5 +79,24 @@ def createBranch(repository, userEmail) {
 
         // Additional steps if needed
     }
+
+    stage('List Branches') {
+            steps {
+                script {
+                    // List branches in each repository
+                    listBranches('jenkinsstage')
+                    listBranches('jenkinsprod')
+                    listBranches('jenkinsdev')
+                }
+            }
+        }
+    }
 }
+
+def listBranches(repository) {
+    // List branches in the specified repository
+    sh "git -C ${repository} branch"
+}
+}
+
 
