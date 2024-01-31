@@ -42,7 +42,7 @@ pipeline {
             }
         }
     }
-}
+
 
 
 def createBranch(repository, userEmail) {
@@ -79,7 +79,7 @@ def createBranch(repository, userEmail) {
 
         // Additional steps if needed
     }
-
+}
     stage('List Branches') {
             steps {
                 script {
@@ -90,12 +90,10 @@ def createBranch(repository, userEmail) {
                 }
             }
         }
-    
+
 
 def listBranches(repository) {
     // List branches in the specified repository
     sh "git -C ${repository} branch"
 }
 }
-
-
