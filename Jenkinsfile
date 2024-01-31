@@ -26,12 +26,16 @@ pipeline {
         stage('Create Branch') {
             steps {
                 script {
-                    // Define repositories
-                    def REPOSITORIES = ['jenkinsstage', 'jenkinsprod', 'jenkinsdev']
+                    // Define repositories and corresponding email addresses
+                    def repositoryEmails = [
+                        'jenkinsstage': 'https://github.com/Shrutitl/jenkinsstage.git',
+                        'jenkinsprod': 'https://github.com/Shrutitl/jenkinsprod.git',
+                        'jenkinsdev': 'https://github.com/Shrutitl/jenkinsdev.git'
+                    ]
 
-                    // Iterate through repositories and create the new branch
-                    REPOSITORIES.each { repository ->
-                        createBranch(repository)
+                    // Iterate through repositories
+                    repositoryEmails.each { repository, userEmail ->
+                        createBranch(repository, userEmail)
                     }
                 }
             }
@@ -39,9 +43,12 @@ pipeline {
     }
 }
 
-def createBranch(repository) {
+def createBranch(repository, userEmail) {
+    // Set Git user email for the specific repository
+    sh "git -C ${repository} config user.email ${userEmail}"
+
     // Create a new branch in the specified repository
-    sh "git -C ${repository} checkout ${MAIN_BRANCH}"
+    sh "git -C ${repository} checkout -b ${NEW_BRANCH}"
 
     // Pull with rebase to reconcile divergent branches
     sh "git -C ${repository} pull --rebase origin ${MAIN_BRANCH}"
@@ -50,26 +57,19 @@ def createBranch(repository) {
     def branchExistsLocally = sh(script: "git -C ${repository} branch --list ${NEW_BRANCH}", returnStatus: true) == 0
 
     if (!branchExistsLocally) {
-        // Create and switch to the new branch locally
-       // sh "git -C ${repository} checkout -b ${NEW_BRANCH}"
-         sh "git checkout -b ${NEW_BRANCH} origin/${NEW_BRANCH}"
         // Additional steps if needed
-         sh  "git commit "
-        sh "git push origin ${NEW_BRANCH}"
-        // Push the new branch to the remote repository
-        //sh "git -C ${repository} push origin ${NEW_BRANCH}"
-         //sh "git push"
-        //sh "git -C ${repository} push -u origin ${NEW_BRANCH}"
+
+        // Commit and push the new branch to the remote repository
+       // sh "touch ${repository}/dummy.txt"
+        //sh "git -C ${repository} add ."
+        sh "git -C ${repository} commit -m 'Create ${NEW_BRANCH}'"
+        sh "git -C ${repository} push origin ${NEW_BRANCH}"
     } else {
         echo "Branch ${NEW_BRANCH} already exists locally in ${repository}. Skipping branch creation."
+
         // Uncomment the line below to push the existing branch to the remote repository
-        // sh "git -C ${repository} push origin ${NEW_BRANCH}"
-          //sh "git push"
-        //sh "git -C ${repository} push -u origin ${NEW_BRANCH}"
-        sh "git commit "
-         sh "git push origin ${NEW_BRANCH}"
+        sh "git -C ${repository} push origin ${NEW_BRANCH}"
     }
 
     // Additional steps if needed
 }
-
