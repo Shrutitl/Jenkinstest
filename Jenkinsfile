@@ -2,36 +2,20 @@ pipeline {
     agent any
 
     environment {
-        MAIN_BRANCH = 'Phase-2'
-        NEW_BRANCH = 'newtestbranch'
-        ACCESS_TOKEN = credentials('githubtoken')
+        NEW_BRANCH_NAME = 'release-1'
+        //fhGITHUB_ORG = 'your-github-org' // Replace with your GitHub organization
     }
 
     stages {
         stage('Checkout') {
             steps {
                 script {
-                    // Clone all repositories
-                    checkout([$class: 'GitSCM',
-                               branches: [[name: "${MAIN_BRANCH}"]],
-                               userRemoteConfigs: [[credentialsId: 'githubtoken', url: 'https://github.com/Shrutitl/jenkinsstage.git'],
-                                                  [credentialsId: 'githubtoken', url: 'https://github.com/Shrutitl/jenkinsprod.git'],
-                                                  [credentialsId: 'githubtoken', url: 'https://github.com/Shrutitl/jenkinsdev.git']]])
-
-                    // Additional setup if needed
-                }
-            }
-        }
-
-        stage('Create Branch') {
-            steps {
-                script {
-                    // Define repositories
-                    REPOSITORIES = ['jenkinsstage', 'jenkinsprod', 'jenkinsdev']
-
-                    // Iterate through repositories and create the new branch
-                    REPOSITORIES.each { repository ->
-                        createBranch(repository)
+                    // Use GitHub Organization Folder plugin to discover repositories
+                    def repositories = discoverRepositories()
+                    
+                    // Create a new branch in each repository
+                    repositories.each { repo ->
+                        createBranch(repo)
                     }
                 }
             }
@@ -39,27 +23,30 @@ pipeline {
     }
 }
 
+def discoverRepositories() {
+    // Use the GitHub Organization Folder plugin to discover repositories
+    def repositories = []
+    def orgFolder = findBuildFolder()
+    orgFolder.items.each { item ->
+        if (item.class.canonicalName == 'com.cloudbees.hudson.plugins.folder.AbstractFolder') {
+            item.getItems().each { repo ->
+                repositories.add(repo.fullName)
+            }
+        } else {
+            repositories.add(item.fullName)
+        }
+    }
+    return repositories
+}
+
 def createBranch(repository) {
     // Create a new branch in the specified repository
-    sh "git checkout ${MAIN_BRANCH}"
+    checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[url: "https://github.com/${repository}"]]])
+    sh "git checkout -b ${NEW_BRANCH_NAME}"
+    sh "git push origin ${NEW_BRANCH_NAME}"
+}
 
-    // Pull with rebase to reconcile divergent branches
-    sh "git pull --rebase origin ${MAIN_BRANCH}"
-
-    // Check if the branch already exists locally
-    def branchExistsLocally = sh(script: "git branch --list ${NEW_BRANCH}", returnStatus: true) == 0
-
-    if (!branchExistsLocally) {
-        // Create and switch to the new branch locally
-        sh "git checkout -b ${NEW_BRANCH}"
-        // Additional steps if needed
-
-        // Push the new branch to the remote repository
-        sh "git push origin ${NEW_BRANCH}"
-    } else {
-        echo "Branch ${NEW_BRANCH} already exists locally. Skipping branch creation."
-        sh "git push origin ${NEW_BRANCH}"
-    }
-
-    // Additional steps if needed
+def findBuildFolder() {
+    // Find the GitHub Organization Folder by its name
+    return Jenkins.instance.getItemByFullName(env.GITHUB_ORG)
 }
