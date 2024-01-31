@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         MAIN_BRANCH = 'Phase-2'
-        NEW_BRANCH = 'release-4'
+        NEW_BRANCH = 'release-5'
         ACCESS_TOKEN = credentials('githubtoken')
 
     }
