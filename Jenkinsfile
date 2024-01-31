@@ -28,9 +28,9 @@ pipeline {
                 script {
                     // Define repositories and corresponding email addresses
                     def repositoryEmails = [
-                        'jenkinsstage': 'https://github.com/Shrutitl/jenkinsstage.git',
-                        'jenkinsprod': 'https://github.com/Shrutitl/jenkinsprod.git',
-                        'jenkinsdev': 'https://github.com/Shrutitl/jenkinsdev.git'
+                        'jenkinsstage': 'Shrutitl@dropamailtoshruti@gmail.com',
+                        'jenkinsprod': 'Shrutitl@dropamailtoshruti@gmail.com',
+                        'jenkinsdev': 'Shrutitl@dropamailtoshruti@gmail.com'
                     ]
 
                     // Iterate through repositories
