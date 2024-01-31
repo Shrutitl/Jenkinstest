@@ -74,9 +74,14 @@ def createBranch(repository, userEmail) {
             }
         } else {
             echo "Branch ${NEW_BRANCH} already exists locally in ${repository}. Skipping branch creation."
-
-            // Uncomment the line below to push the existing branch to the remote repository
-            sh "git -C ${repository} push origin ${NEW_BRANCH}"
+               def changesToCommit = sh(script: "git -C ${repository} status --porcelain", returnStatus: true) == 0
+                if (changesToCommit) {
+                // Commit and push the new branch to the remote repository
+                sh "git -C ${repository} commit -m 'Create ${NEW_BRANCH}'"
+                sh "git -C ${repository} push origin ${NEW_BRANCH}"
+            } else {
+                echo "No changes to commit. Skipping commit and pushing the branch."
+            }
         }
 
         // Additional steps if needed
